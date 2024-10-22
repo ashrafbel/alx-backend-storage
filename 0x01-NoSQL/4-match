@@ -1,0 +1,2 @@
+// find name in collection
+db.school.find({name: "Holberton school"})
