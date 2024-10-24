@@ -6,6 +6,17 @@ import uuid
 from typing import Union, Callable
 
 
+def count_calls(method: Callable) -> Callable:
+    "Counts the calls made to a method within the Cache class."
+    @wraps(method)
+    def wrapper(self, *args, **kwargs):
+        "Delivers the given method after updating its call counter."
+        k = method.__qualname__
+        c = self._redis.incr(k)
+        return method(self, *args, **kwargs)
+    return wrapper
+
+
 class Cache:
     def __init__(self):
         """Initialize a new cache object."""
