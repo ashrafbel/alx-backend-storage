@@ -69,9 +69,12 @@ class Cache:
 
     def replay(self, method: Callable) -> None:
         "Displays the history of calls for the specified method."
-        in_key = f"{method.__qualname__}:inputs"
-        o_key = f"{method.__qualname__}:outputs"
-        inputs = self._redis.lrange(in_key, 0, -1)
-        outputs = self._redis.lrange(o_key, 0, -1)
-        countCall = self._redis.get(method.__qualname__).decode('utf-8')
-        print(f"{method.__qualname__} was called {countCall} times:")
+        input_key = f"{method.__qualname__}:inputs"
+        output_key = f"{method.__qualname__}:outputs"
+        inputs = self._redis.lrange(input_key, 0, -1)
+        outputs = self._redis.lrange(output_key, 0, -1)
+        call_count = self._redis.get(method.__qualname__).decode('utf-8')
+        print(f"{method.__qualname__} was called {call_count} times:")
+        for input_data, output_data in zip(inputs, outputs):
+            print(f"{method.__qualname__}(*{input_data.decode('utf-8')}) -> "
+                  f"{output_data.decode('utf-8')}")
