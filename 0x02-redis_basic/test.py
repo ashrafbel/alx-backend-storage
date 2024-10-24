@@ -4,8 +4,7 @@
 import redis
 import uuid
 from typing import Union, Callable
-from functools import wraps
-
+from functools import wraps  # إضافة الاستيراد هنا
 
 def count_calls(method: Callable) -> Callable:
     "Counts the calls made to a method within the Cache class."
@@ -16,7 +15,6 @@ def count_calls(method: Callable) -> Callable:
         c = self._redis.incr(k)
         return method(self, *args, **kwargs)
     return wrapper
-
 
 class Cache:
     def __init__(self):
@@ -31,15 +29,11 @@ class Cache:
         self._redis.set(k, data)
         return k
 
-    def get(
-            self,
-            key: str,
-            fn: Callable = None,
-            ) -> Union[str, bytes, int, float]:
+    def get(self, key: str, fn: Callable = None) -> Union[str, bytes, int, float, None]:
         "Gets a value from the Redis data storage"
         d = self._redis.get(key)
         if d is None:
-            return None
+            return None  # إرجاع None إذا كان المفتاح غير موجود
         if fn:
             return fn(d)
         return d
@@ -51,3 +45,4 @@ class Cache:
     def get_int(self, key: str) -> int:
         """Gets an integer value stored in Redis."""
         return self.get(key, fn=lambda d: int(d) if d else None)
+
