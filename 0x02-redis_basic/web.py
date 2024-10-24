@@ -22,7 +22,6 @@ def cache_with_expiry(expiration_time: int = 10) -> Callable:
                 return cached_content.decode('utf-8')
             content = func(url)
             redis_client.setex(cache_key, expiration_time, content)
-            
             return content
         return wrapper
     return decorator
