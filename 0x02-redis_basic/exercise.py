@@ -28,3 +28,11 @@ class Cache:
         if fn:
             return fn(d)
         return d
+
+    def get_str(self, key: str) -> str:
+        """Changes bytes into a string."""
+        return self.get(key, fn=lambda d: d.decode('utf-8'))
+
+    def get_int(self, key: str) -> int:
+        """Gets an integer value stored in Redis."""
+        return self.get(key, fn=int)
